@@ -9,17 +9,12 @@ import {
 import generateMessage from './src/script/MessageGenerator';
 
 function App(): JSX.Element {
-  const generateGroupId = () => {
-    return Math.floor(Math.random() * 6) + 1;
-  };
-
   const generateImageId = () => {
     return Math.floor(Math.random() * 5000) + 1;
   };
 
   const generateNewCatData = () => {
     return {
-      groupId: generateGroupId(),
       imageId: generateImageId(),
       message: generateMessage(),
     };
@@ -32,12 +27,7 @@ function App(): JSX.Element {
       <Image
         style={styles.image}
         source={{
-          uri:
-            'https://d2ph5fj80uercy.cloudfront.net/0' +
-            catData.groupId +
-            '/cat' +
-            catData.imageId +
-            '.jpg',
+          uri: 'https://cataas.com/cat?' + catData.imageId,
         }}
       />
       <Text style={styles.message}>{catData.message}</Text>
