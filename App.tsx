@@ -3,8 +3,10 @@ import {
   Image,
   Text,
   SafeAreaView,
+  View,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import generateMessage from './src/script/MessageGenerator';
 
@@ -22,18 +24,46 @@ function App(): JSX.Element {
 
   const [catData, setCatData] = useState(generateNewCatData());
 
+  enum LoadingState {
+    LOADING,
+    LOADED,
+  }
+
+  const [loadingState, setLoadingState] = useState(LoadingState.LOADING);
+
+  const imageLoadingItem = () => {
+    if (loadingState === LoadingState.LOADING) {
+      return <ActivityIndicator size="large" />;
+    } else {
+      return <View />;
+    }
+  };
+
+  const generateButtonPressHandler = () => {
+    setLoadingState(LoadingState.LOADING);
+    setCatData(generateNewCatData());
+  };
+
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <Image
-        style={styles.image}
-        source={{
-          uri: 'https://cataas.com/cat?' + catData.imageId,
-        }}
-      />
+      <View style={styles.imageContainer}>
+        <Image
+          style={
+            loadingState === LoadingState.LOADING
+              ? styles.loadingImage
+              : styles.image
+          }
+          source={{
+            uri: 'https://cataas.com/cat?' + catData.imageId,
+          }}
+          onLoad={() => setLoadingState(LoadingState.LOADED)}
+        />
+        {imageLoadingItem()}
+      </View>
       <Text style={styles.message}>{catData.message}</Text>
       <TouchableOpacity
         style={styles.generateButton}
-        onPress={() => setCatData(generateNewCatData())}>
+        onPress={generateButtonPressHandler}>
         <Text style={styles.generateButtonText}>Сгенерировать!</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -48,10 +78,20 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     padding: 10,
   },
+  imageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 200,
+    height: 200,
+  },
   image: {
     width: 200,
     height: 200,
     borderRadius: 50,
+  },
+  loadingImage: {
+    width: 0,
+    height: 0,
   },
   message: {
     marginTop: 48,
