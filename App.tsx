@@ -55,6 +55,7 @@ function App(): JSX.Element {
           }
           source={{
             uri: 'https://cataas.com/cat?' + catData.imageId,
+            cache: 'force-cache',
           }}
           onLoad={() => setLoadingState(LoadingState.LOADED)}
         />
@@ -88,10 +89,10 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 50,
+    opacity: 1,
   },
   loadingImage: {
-    width: 0,
-    height: 0,
+    opacity: 0,
   },
   message: {
     marginTop: 48,
